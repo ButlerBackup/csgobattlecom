@@ -1,0 +1,3 @@
+<h1>{L:VERIFICATION_TITLE}</h1>
+
+<div>{L:VERIFICATION_TEXT}</div>

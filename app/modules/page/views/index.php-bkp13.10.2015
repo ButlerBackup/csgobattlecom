@@ -1,0 +1,212 @@
+<?php
+
+include('blog/wp-config.php'); 
+?>
+
+<div class="wrapper">
+
+    <div class="box">
+
+        <div class="block_about">
+
+            <div class="img"></div>
+
+
+
+            <div class="text">
+
+                <div><div class="box_title">{L:INDEX_ABOUT}</div></div>
+
+                1v1 Skin Battle platform CSGOBattle.com is a new project we have made for the Counter Strike community. CSGOBattle focuses on 1v1, in a variety of different modes which will be introduced throughout time. Modes such as knife, dodgeball, kz, aim etc. The catch is that you will be able to place skins on your self and challenge other players to play in a mode you prefer. The winner will be awarded all the skins an opponent has placed. We have ladders and will be adding tournament and clan support in the near future. Servers will be set up in 124 tick and we will be adding EAC(Anti-cheat) support for knife and aim modes. Will be adding servers throughout the world!
+
+                <br/>
+
+                <br/>
+
+                Register, add Steam ID, Steam Trade Link, get approved by an admin and get ready to play!
+
+                <br/>
+
+            </div>
+
+
+
+            <div class="circle-icon"></div>
+
+        </div>
+
+
+
+        <div class="steps">
+
+            <div class="vline-icon"></div>
+
+
+
+            <div class="how_to_wrap"><div class="how_to_play">{L:INDEX_HOW_TO_PLAY}</div></div>
+
+
+
+            <div class="steps_qu">
+
+                <div class="hline-icon"></div>
+
+
+
+                <div class="question_wrap">
+
+                    <div class="question-icon"></div>
+
+
+
+                    <div class="step1"><div class="step_text">{L:INDEX_STEP1}</div></div>
+
+                    <div class="step2"><div class="step_text">{L:INDEX_STEP2}</div></div>
+
+                    <div class="step3"><div class="step_text">{L:INDEX_STEP3}</div></div>
+
+                    <div class="step4"><div class="step_text">{L:INDEX_STEP4}</div></div>
+
+                </div>
+
+
+
+                <div class="do_subscribe_wrap"><div class="do_subscribe">{L:INDEX_SUBSCRIBE}</div></div>
+
+
+
+                <div class="steps_qu_fill"></div>
+
+
+
+                <div class="finger-icon"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="subscribe">
+
+    <div class="up-icon"></div>
+
+</div>
+
+
+
+<div class="social">
+
+
+
+<div class="wrapper footer_ful">
+<div class="fot_column fcol1">
+<div class="fot_log">
+<img src="../../app/public/images/img/footerlogo.png"/>
+</div>
+
+<?php 
+$page_id = 62;
+
+$page_data = get_page( $page_id ); 
+$content = $page_data->post_content;
+$content=str_replace("<pre>","",$content);
+$content=str_replace("</pre>","",$content);
+?>
+
+<p><?php  echo substr($content, 0, 200); ?></p>
+</div>
+<div class="fcol2">
+<h3>GSGO Latest News</h3>
+<?php  $args = array(
+	'posts_per_page'   => 3,
+	'offset'           => 0,
+	'category'         => '2',
+	'category_name'    => '',
+	'orderby'          => 'date',
+	'order'            => 'DESC',
+	'include'          => '',
+	'exclude'          => '',
+	'meta_key'         => '',
+	'meta_value'       => '',
+	'post_type'        => 'post',
+	'post_mime_type'   => '',
+	'post_parent'      => '',
+	'author'	   => '',
+	'post_status'      => 'publish',
+	'suppress_filters' => true 
+);
+
+$posts_array = get_posts($args); 
+foreach ($posts_array as $news)
+{ ?>
+<div class="news_list">
+<?php 
+$feat_image = wp_get_attachment_url( get_post_thumbnail_id($news->ID)); 
+
+?>
+<a href="<?php echo esc_url( get_permalink($news->ID) ); ?>">
+<div class="img_news"><img src="<?php echo $feat_image ?>" width="77" height="53"/></div>
+<div class="news_right">
+<h5><?php echo mb_strimwidth($news->post_title, 0, 24);  ?></h5>
+<p><?php echo mb_strimwidth($news->post_content, 0, 29, "..."); ?></p>
+<p><?php echo date('d/m/Y', strtotime( $news->post_date)); ?></p>
+</div>
+</a>
+</div>
+<?php } 
+?>
+
+</div>
+<div class="fot_column fcol3">
+<h3>Game Features</h3>
+<ul>
+<?php  $args = array(
+	'posts_per_page'   => 6,
+	'offset'           => 0,
+	'category'         => '5',
+	'category_name'    => '',
+	'orderby'          => 'date',
+	'order'            => 'DESC',
+	'include'          => '',
+	'exclude'          => '',
+	'meta_key'         => '',
+	'meta_value'       => '',
+	'post_type'        => 'post',
+	'post_mime_type'   => '',
+	'post_parent'      => '',
+	'author'	   => '',
+	'post_status'      => 'publish',
+	'suppress_filters' => true 
+);
+
+$posts_array = get_posts($args); 
+foreach ($posts_array as $gamef)
+{ ?>
+<li><?php echo mb_strimwidth($gamef->post_title, 0, 28);  ?></li>
+<?php } 
+?>
+
+</ul>
+</div>
+</div>
+
+
+
+    <div class="social_wrap">
+
+        <a class="twitter" href=""></a>
+
+        <a class="facebook" href=""></a>
+
+        <a class="google" href=""></a>
+
+        <a class="skype" href=""></a>
+
+    </div>
+ 
+</div>

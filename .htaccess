@@ -1,0 +1,13 @@
+Options -Indexes
+AddDefaultCharset utf-8
+php_value date.timezone "Europe/Kiev"
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !^favicon\.ico
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} ^(.*)\.php$ [OR]
+RewriteCond %{REQUEST_FILENAME} ^(.*)\.ini$
+RewriteRule ^(.*)$ index.php [L,QSA]
