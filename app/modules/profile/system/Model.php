@@ -307,6 +307,17 @@ class ProfileModel extends Model {
 		return $this->getAll($this->query("SELECT * FROM `servers`;"));
 
 	}
+    public function getServerLock($sid, $interval) {
+
+        return $this->fetch($this->query("
+          SELECT * FROM `matches`
+          WHERE `sid` = '$sid' AND
+          FROM_UNIXTIME(`startTime`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
+          LIMIT 1
+          ;"
+        ));
+
+    }
 
 	public function countMatchesList($uid) {
 		$sql = "
@@ -613,6 +624,12 @@ class ProfileModel extends Model {
 	public function setMatchBlocked($matchID) {
 
 		return $this->update('matches', array('blocked' => '1'), " `id` = '$matchID' ");
+
+	}
+
+    public function setMatchServer($matchID, $serverID) {
+
+		return $this->update('matches', array('sid' => $serverID), "`id` = '$matchID' ");
 
 	}
 

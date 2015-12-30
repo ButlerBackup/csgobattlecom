@@ -1,0 +1,1 @@
+ALTER TABLE `matches` ADD `sid` INT NOT NULL AFTER `end`;
