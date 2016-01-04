@@ -132,13 +132,13 @@ class ProfileController extends Controller {
 
 				if ($column == "looking" AND $show == 0) {
 					$response['target_h']["#" . $column] = '<input id="challenge-amount" class="challenge-amount" list="amount" value="5" name="amount">
-                                                        <datalist  id="amount">
-                                                         <option value="5">5$</option>
-                                                         <option value="10">10$</option>
-                                                         <option value="20">20$</option>
-                                                         <option value="50">50$</option>
-                                                         <option value="100">100$</option>
-                                                       </datalist>';
+														<datalist  id="amount">
+														 <option value="5">5$</option>
+														 <option value="10">10$</option>
+														 <option value="20">20$</option>
+														 <option value="50">50$</option>
+														 <option value="100">100$</option>
+													   </datalist>';
 				}
 
 				$response['target_h']["#" . $column] .= '<a class="' . $class . '" onclick="' . ajaxLoad(url('profile', 'playerVisibility'), 'reqest', 'task:' . $post['task'] . '|mid:' . $post['mid']) . '">' . Lang::translate($text) . '</a>';
@@ -848,7 +848,7 @@ class ProfileController extends Controller {
 								//TODO Винести в константу інтервал часу на який перевіряти
 								$serverLock = $model->getServerLock($server->id, INTERVAL_LOCK);
 								if (($players == 0) && is_null($serverLock)) {
-									$response['target_h']['#map_note'] = 'Go to our server : <a href="steam://connect/' . ($server->addr) . '" class="profile-menu" title="Join">' . ($server->addr) . '</a>';
+									$response['target_h']['#map_note'] = '<div class="profile-menu"><div id="challenge"><a href="steam://connect/' . ($server->addr) . '" title="Go to our server : ' . ($server->addr) . '">Join</a></div></div>';
 									$model->setMatchServer($match->id, $server->id); //update matches with server id
 									break;
 								}
@@ -1165,12 +1165,12 @@ class ProfileController extends Controller {
 							}
 
 							/*
-								                            $marketPrice = get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=".urlencode($asset->market_name));
-								                            $marketJson = json_decode($marketPrice);
+															$marketPrice = get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=".urlencode($asset->market_name));
+															$marketJson = json_decode($marketPrice);
 
-								                            $arr1 = array("$", "&#8364;");
-								                            $arr2 = array("", "");
-								                            $price = str_replace($arr1, $arr2, $marketJson->median_price);
+															$arr1 = array("$", "&#8364;");
+															$arr2 = array("", "");
+															$price = str_replace($arr1, $arr2, $marketJson->median_price);
 							*/
 
 							$price = $asset->price;

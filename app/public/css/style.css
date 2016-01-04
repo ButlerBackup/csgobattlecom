@@ -2512,7 +2512,10 @@ legend {
     transform-origin: 20px 20px;
     content: '';
     background: rgba(0, 0, 0, 0) url('../images/icon/challenge.png') no-repeat scroll 50% 50% / contain padding-box border-box;
-}/*#A_1:before*/
-
-
+}
+#map_note {
+  position: relative;
+  float: left;
+  width: 520px;
+  font-size: 24px;
 }
