@@ -848,7 +848,8 @@ class ProfileController extends Controller {
 								//TODO Винести в константу інтервал часу на який перевіряти
 								$serverLock = $model->getServerLock($server->id, INTERVAL_LOCK);
 								if (($players == 0) && is_null($serverLock)) {
-									$response['target_h']['#map_note'] = '<div class="profile-menu"><div id="challenge"><a href="steam://connect/' . ($server->addr) . '" title="Go to our server : ' . ($server->addr) . '">Join</a></div></div>';
+									//$response['target_h']['#map_note'] = '<div class="profile-menu"><div id="challenge"><a href="steam://connect/' . ($server->addr) . '" title="Go to our server : ' . ($server->addr) . '">Join</a></div></div>';
+									$response['target_h']['#map_note'] = 'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
 									$model->setMatchServer($match->id, $server->id); //update matches with server id
 									break;
 								}

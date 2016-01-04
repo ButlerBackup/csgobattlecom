@@ -2485,37 +2485,36 @@ legend {
 /* ------------ Конец Адаптивный дизайн ------------ */
 
 #join {
-    box-sizing: border-box;
-    color: rgb(182, 182, 182);
-    display: block;
-    height: 46px;
-    position: relative;
-    text-decoration: none;
-    width: 290px;
-    perspective-origin: 145px 23px;
-    transform-origin: 145px 23px;
-    padding: 14px 5px 14px 100px;
-}/*#A_1*/
+  box-sizing: border-box;
+  display: inline-block;
+  height: 46px;
+  position: relative;
+  margin-top: 10px;
+  width: 320px;
+  background-color: #1f1f1f;
+  -webkit-box-shadow: 0 3px 12px 3px rgba(0, 0, 0, 0.67);
+  -moz-box-shadow: 0 3px 12px 3px rgba(0, 0, 0, 0.67);
+  box-shadow: 0 3px 12px 3px rgba(0, 0, 0, 0.67);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 12px 5px 14px 70px;
+}
 
 #join:before {
-    background-position: 50% 50%;
-    color: rgb(182, 182, 182);
-    cursor: pointer;
-    display: block;
-    height: 40px;
-    left: 25px;
-    position: absolute;
-    top: 0px;
-    width: 40px;
-    align-self: stretch;
-    perspective-origin: 20px 20px;
-    transform-origin: 20px 20px;
-    content: '';
-    background: rgba(0, 0, 0, 0) url('../images/icon/challenge.png') no-repeat scroll 50% 50% / contain padding-box border-box;
+  background-position: 50% 50%;
+  display: block;
+  height: 40px;
+  left: 25px;
+  position: absolute;
+  top: 0px;
+  width: 40px;
+  content: '';
+  background: rgba(0, 0, 0, 0) url('../images/icon/challenge.png') no-repeat scroll 50% 50% / contain padding-box border-box;
 }
 #map_note {
   position: relative;
-  float: left;
-  width: 520px;
-  font-size: 24px;
+  margin: 40px 10px;
+  width: 480px;
+  font-size: 20px;
 }
