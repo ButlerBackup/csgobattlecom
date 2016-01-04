@@ -837,41 +837,29 @@ class ProfileController extends Controller {
 				if ($match->status == 1 || ($match->status == 2 && $match->blocked)) {
 					if ($match->status == 1) {
 						$servers = $model->getServersList();
-						//Header('Content-Type: text/plain');
-						//Header('X-Content-Type-Options: nosniff');
-						//define('SQ_TIMEOUT', 1);
-                        //define('SQ_ENGINE', SourceQuery::SOURCE);
-
 						$Query = new SourceQuery();
 						foreach ($servers as $server) {
-							$addr = explode ( ':', $server->addr);
-							//define('SQ_SERVER_ADDR', $addr[0]);
-							//define('SQ_SERVER_PORT', $addr[1]);
+							$addr = explode(':', $server->addr);
 							try
 							{
 								$Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
 								$info = $Query->GetInfo();
 								$players = $info['Players'];
-								//print_r($Query->GetInfo());
-								//print_r($Query->GetPlayers());
-								//print_r($Query->GetRules());
 								//TODO Винести в константу інтервал часу на який перевіряти
-								$serverLock = $model->getServerLock($server->id,INTERVAL_LOCK);
-								if (($players == 0) && is_null($serverLock)){
-									$response['target_h']['#map_note'] = 'Go to our '. ($server->addr);
-
+								$serverLock = $model->getServerLock($server->id, INTERVAL_LOCK);
+								if (($players == 0) && is_null($serverLock)) {
+									$response['target_h']['#map_note'] = 'Go to our server : <a href="steam://connect/' . ($server->addr) . '" class="profile-menu" title="Join">' . ($server->addr) . '</a>';
 									$model->setMatchServer($match->id, $server->id); //update matches with server id
 									break;
 								}
 							} catch (Exception $e) {
-								$response['target_h']['#map_note'] = 'error: '.$e->getMessage();
+								$response['target_h']['#map_note'] = 'error: ' . $e->getMessage();
 								//echo $e->getMessage();
 							} finally {
 								$Query->Disconnect();
 							}
 						}
 						//$response['target_h']['#map_note'] = 'Go to our <a href="' . url('servers') . '" target="_blank">servers page</a> to find a server to play on';
-						//$response['target_h']['#map_note'] = var_export($servers[0]->addr, true);
 
 					} else {
 						$response['target_h']['#map_note'] = '';
