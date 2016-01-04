@@ -855,9 +855,10 @@ class ProfileController extends Controller {
 								//print_r($Query->GetInfo());
 								//print_r($Query->GetPlayers());
 								//print_r($Query->GetRules());
-								$serverLock = $model->getServerLock($server->id,15);
+								//TODO Винести в константу інтервал часу на який перевіряти
+								$serverLock = $model->getServerLock($server->id,INTERVAL_LOCK);
 								if (($players == 0) && is_null($serverLock)){
-									$response['target_h']['#map_note'] = 'Go to our '. var_export($server->addr, true). ' '. var_export($match->id, true);
+									$response['target_h']['#map_note'] = 'Go to our '. ($server->addr);
 
 									$model->setMatchServer($match->id, $server->id); //update matches with server id
 									break;
