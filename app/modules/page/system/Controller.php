@@ -131,15 +131,15 @@ class PageController extends Controller
 
     {
 
-		  
-
         $model = new PageModel();
 
+        $modelProfile = new ProfileModel();
 
+        $this->view->ladder_list = $modelProfile->getTopLadder(5);
 
+        $this->view->last_reg_list = $modelProfile->getLastRegistered(4);
 
-
-
+        $this->view->last_matches = $modelProfile->getLastMatchesList(5);
 
         $act = Request::getUri(0);
 

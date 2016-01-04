@@ -80,7 +80,7 @@
         if ($('#i' + id).length && !$('#my' + id).length) {
             if(!str.blocked) {
                 str.blocked = true;
-                <?php echo ajaxLoad(url('profile', 'addAsset'), 'add_asset', 'assetId:\' + id + \'|mid:' . $this->match->id . '', 'addAssetAct|!exception'); ?>
+                <?php echo ajaxLoad(url('profile','addAsset'), 'add_asset', 'assetId:\' + id + \'|mid:'.$this->match->id.'', 'addAssetAct|!exception'); ?>
             }
         }
     }
@@ -110,7 +110,7 @@
     function removeAsset(id) {
         if ($('#my' + id).length) {
             var assetNo = $('#my' + id).children('#myAssetNo' + id).html();
-            <?php echo ajaxLoad(url('profile', 'removeAsset'), 'add_asset', 'aid:\'+id+\'|id:\'+assetNo+\'|mid:' . $this->match->id . '', 'rmAssetAct|!exception'); ?>;
+            <?php echo ajaxLoad(url('profile','removeAsset'), 'add_asset', 'aid:\'+id+\'|id:\'+assetNo+\'|mid:'.$this->match->id.'', 'rmAssetAct|!exception'); ?>;
         }
     }
 
@@ -141,7 +141,7 @@
             window.location.href = '{URL:settings/general}';
         }
 
-        <?php if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request::getParam('user')->id): ?>
+        <?php if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request::getParam('user')->id):?>
         /* initial load data */
         var inventory = function(){
             show_loading('#assets');
@@ -155,18 +155,16 @@
 
         $.when(inventory()).then(syncUsers());
 
-        <?php endif;?>
+        <?php endif; ?>
     });
 </script>
 <!--interval updates-->
 
 <?php
 if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request::getParam('user')->id OR Request::getRole() == 'admin') {
-	ajaxSetInterval('sync()', 2000, 'show_loading("#themAssets");show_loading("#myAssets")');
-	if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request::getParam('user')->id) {
-		ajaxSetInterval('reloadInventory()', 300000, 'show_loading("#assets")');
-	}
-
+    ajaxSetInterval('sync()', 2000, 'show_loading("#themAssets");show_loading("#myAssets")');
+if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request::getParam('user')->id)
+    ajaxSetInterval('reloadInventory()', 300000, 'show_loading("#assets")');
 }
 ?>
 
@@ -174,23 +172,23 @@ if ($this->uid->id == Request::getParam('user')->id OR $this->pid->id == Request
 
  <!--   <div>
         <b>
-            <?php echo $this->pid->nickname . ' {L:MATCH_VS} ' . $this->uid->nickname; ?>
+            <?php echo $this->pid->nickname.' {L:MATCH_VS} '.$this->uid->nickname; ?>
         </b>
 
         <?php
-switch ($this->match->status) {
-case 2:
-	$status = '{L:MATCH_CLOSED}';
-	break;
-case 1:
-	$status = '{L:MATCH_ACTIVE}';
-	break;
-default:
-	$status = '{L:MATCH_PENDING_CONFIRM}';
-}
-?>
+            switch($this->match->status) {
+                case 2:
+                    $status = '{L:MATCH_CLOSED}';
+                    break;
+                case 1:
+                    $status = '{L:MATCH_ACTIVE}';
+                    break;
+                default:
+                    $status = '{L:MATCH_PENDING_CONFIRM}';
+            }
+        ?>
 
-        <?php echo $status; ?>
+        <?php echo $status;?>
     </div>
 -->
 
@@ -202,7 +200,7 @@ default:
                     <a href="<?php echo url($this->uid->id); ?>">
                         <?php echo $this->uid->nickname; ?>
                     </a>
-                    <?php echo (($this->uid->country) ? '<img src="' . _SITEDIR_ . 'public/images/country/' . mb_strtolower($this->uid->country) . '.png">' : ''); ?>
+                    <?php echo (($this->uid->country) ? '<img src="'. _SITEDIR_.'public/images/country/'.mb_strtolower($this->uid->country).'.png">' : ''); ?>
                 </div>
                 <!--<div class="rank"><?php echo getRank($this->uid->elo); ?></div>-->
             </div>
@@ -214,15 +212,15 @@ default:
                 <div>{L:LADDERS_TIES}: <?php echo $this->uid->ties; ?></div>
                 <div>{L:LADDERS_LOSSES}: <?php echo $this->uid->losses; ?></div>
                 <?php /*
-<div>
-{L:MATCH_START_TIME}:
-<?php echo (($this->uid->id == Request::getParam('user')->id) ? '<input type="datetime-local" id="time" value="'.$this->match->pTime.'">' : $this->match->pTime); ?>
-</div>
-<div>
-{L:MATCH_MAP}:
-<?php echo (($this->uid->id == Request::getParam('user')->id) ? '<input type="text" id="map" value="'.$this->match->pMap.'">' : $this->match->pMap); ?>
-</div>
- */?>
+                <div>
+                    {L:MATCH_START_TIME}:
+                    <?php echo (($this->uid->id == Request::getParam('user')->id) ? '<input type="datetime-local" id="time" value="'.$this->match->pTime.'">' : $this->match->pTime); ?>
+                </div>
+                <div>
+                    {L:MATCH_MAP}:
+                    <?php echo (($this->uid->id == Request::getParam('user')->id) ? '<input type="text" id="map" value="'.$this->match->pMap.'">' : $this->match->pMap); ?>
+                </div>
+                */ ?>
             </div>
         </div>
 
@@ -232,7 +230,7 @@ default:
             <div class="avatar"><img src="<?php echo getAvatar($this->pid->id); ?>" alt="avatar" />
                 <div  class="nick">
                     <a href="<?php echo url($this->pid->id); ?>"><?php echo $this->pid->nickname; ?></a>
-                    <?php echo (($this->pid->country) ? '<img src="' . _SITEDIR_ . 'public/images/country/' . mb_strtolower($this->pid->country) . '.png">' : ''); ?>
+                    <?php echo (($this->pid->country) ? '<img src="'._SITEDIR_.'public/images/country/'.mb_strtolower($this->pid->country).'.png">' : ''); ?>
                 </div>
                 <!--<div  class="rank"><?php echo getRank($this->pid->elo); ?></div>-->
             </div>
@@ -246,15 +244,15 @@ default:
                 <div>{L:LADDERS_TIES}: <?php echo $this->pid->ties; ?></div>
                 <div>{L:LADDERS_LOSSES}: <?php echo $this->pid->losses; ?></div>
                 <?php /*
-<div>
-{L:MATCH_START_TIME}:
-<?php echo (($this->pid->id == Request::getParam('user')->id) ? '<input type="datetime" id="time" value="'.$this->match->uTime.'">' : $this->match->uTime); ?>
-</div>
-<div>
-{L:MATCH_MAP}:
-<?php echo (($this->pid->id == Request::getParam('user')->id) ? '<input type="text" id="map" value="'.$this->match->uMap.'">' : $this->match->uMap); ?>
-</div>
- */?>
+                <div>
+                    {L:MATCH_START_TIME}:
+                    <?php echo (($this->pid->id == Request::getParam('user')->id) ? '<input type="datetime" id="time" value="'.$this->match->uTime.'">' : $this->match->uTime); ?>
+                </div>
+                <div>
+                    {L:MATCH_MAP}:
+                    <?php echo (($this->pid->id == Request::getParam('user')->id) ? '<input type="text" id="map" value="'.$this->match->uMap.'">' : $this->match->uMap); ?>
+                </div>
+                */ ?>
             </div>
         </div>
     </div>
@@ -262,56 +260,30 @@ default:
     <div class="clear"></div>
 
 <?php
-if (Request::getRole() == 'admin') {
-	echo '<div class="btn control-panel" style="margin-top: 15px;" onclick="' . ajaxLoad(url('profile', 'control_match'), 'control_match', 'id:' . $this->match->id) . '">{L:MATCH_CONTROL}</div>';
-	echo '<div id="control"></div>';
-}
+    if (Request::getRole() == 'admin') {
+        echo '<div class="btn control-panel" style="margin-top: 15px;" onclick="'.ajaxLoad(url('profile', 'control_match'), 'control_match', 'id:'.$this->match->id).'">{L:MATCH_CONTROL}</div>';
+        echo '<div id="control"></div>';
+    }
 ?>
-<?php
-// require _BASEPATH_ . '/SourceQuery/bootstrap.php';
-// use xPaw\SourceQuery\SourceQuery;
-// Header('Content-Type: text/plain');
-// Header('X-Content-Type-Options: nosniff');
 
-// define('SQ_SERVER_ADDR', '162.251.166.186');
-// define('SQ_SERVER_PORT', 27016);
-// define('SQ_TIMEOUT', 1);
-// define('SQ_ENGINE', SourceQuery::SOURCE);
-
-// $Query = new SourceQuery();
-
-// try
-// {
-// 	$Query->Connect(SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE);
-
-// 	echo ($Query->GetInfo());
-// 	echo ($Query->GetPlayers());
-// 	echo ($Query->GetRules());
-// } catch (Exception $e) {
-// 	echo $e->getMessage();
-// } finally {
-// 	$Query->Disconnect();
-// }
-?>
 <div id="map_note"></div>
 
 <!-- END HEAD -->
 
 <!-- CONTENT -->
 
-<?php if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id || Request::getRole() == 'admin') {
-	?>
+<?php if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id || Request::getRole() == 'admin') { ?>
 
     <!-- MATCH RESULT -->
 
     <div id="battle">
       <?php
-if ($this->match->pready == 0 AND $this->match->uready == 0 AND $this->math->status == 1) {
-		echo '<div id="status_action">';
-		echo '<span id="cancelMatch' . $this->match->id . '" class="cancel-match-btn" ><a onclick="ajaxLoad(\'' . url('profile', 'matchCancel') . '\',\'reqest\',\'mid:' . $this->match->id . '\');" >{L:MATCH_CANCEL}</a></span>';
-		echo "</div>";
-	}
-	?>
+           if($this->match->pready==0 AND $this->match->uready==0  AND $this->math->status==1) {
+               echo '<div id="status_action">';
+               echo '<span id="cancelMatch' . $this->match->id . '" class="cancel-match-btn" ><a onclick="ajaxLoad(\'' . url('profile', 'matchCancel') . '\',\'reqest\',\'mid:' . $this->match->id . '\');" >{L:MATCH_CANCEL}</a></span>';
+               echo "</div>";
+           }
+      ?>
     </div>
 
     <!-- END MATCH RESULT -->
@@ -355,8 +327,8 @@ if ($this->match->pready == 0 AND $this->match->uready == 0 AND $this->math->sta
 
 <?php
 }
-if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id) {
-	?>
+    if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id) {
+        ?>
 
     <!-- INVENTORY -->
 
@@ -370,52 +342,51 @@ if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request
         <div id="assets"></div>
     </div>
 
-    <?php }
-?>
+    <?php } ?>
 
     <!-- END INVENTORY -->
 
     <!-- CHAT -->
 
     <?php
-if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id || Request::getRole() == 'admin'):
-	echo ajaxSetInterval(ajaxLoad(url('matchgetchat'), 'chat_get', 'mid:' . $this->match->id, 'chatScroll'), 2400);
-	echo ajaxKeyDown(13, '$(".chatSubmit").click();');
-	?>
+        if ($this->uid->id == Request::getParam('user')->id || $this->pid->id == Request::getParam('user')->id || Request::getRole() == 'admin'):
+        echo ajaxSetInterval(ajaxLoad(url('matchgetchat'), 'chat_get', 'mid:' . $this->match->id, 'chatScroll'), 2400);
+        echo ajaxKeyDown(13, '$(".chatSubmit").click();');
+    ?>
 
-								    <div class="matchRight chat">
-								        {L:MATCH_CHAT}:<br/>
+    <div class="matchRight chat">
+        {L:MATCH_CHAT}:<br/>
 
-								        <div id="dialog" class="matchChatBody">
-								            <?php
-	while ($list = mysqli_fetch_object($this->list)) {
-		$value = (array) $list;
-		echo '<div class="chat_message">'
-		. '<div class="chat_img"><a href="' . url($value['uid']) . '" target="_blank"><img src="' . getAvatar($value['uid'], 's') . '" alt="avatar"/></a></div>'
-		. '<div class="chat_text">'
-		. '<div><span class="chat_nickname" onclick="chatNickname(\'' . $value['uName'] . '\');">' . $value['uName'] . '</span> <span class="chat_time">' . printTime($value['time']) . '</span></div>'
-			. '<div>' . $value['message'] . '</div>'
-			. '</div>'
-			. '</div>';
+        <div id="dialog" class="matchChatBody">
+            <?php
+            while ($list = mysqli_fetch_object($this->list)) {
+                $value = (array)$list;
+                echo '<div class="chat_message">'
+                    . '<div class="chat_img"><a href="' . url($value['uid']) . '" target="_blank"><img src="' . getAvatar($value['uid'], 's') . '" alt="avatar"/></a></div>'
+                    . '<div class="chat_text">'
+                    . '<div><span class="chat_nickname" onclick="chatNickname(\'' . $value['uName'] . '\');">' . $value['uName'] . '</span> <span class="chat_time">' . printTime($value['time']) . '</span></div>'
+                    . '<div>' . $value['message'] . '</div>'
+                    . '</div>'
+                    . '</div>';
 
-		setSession('match_chat_lid' . $list->mid, $list->id);
-	}
-	?>
-								        </div>
+                setSession('match_chat_lid' . $list->mid, $list->id);
+            }
+            ?>
+        </div>
 
-								        <script>
-								            chatScroll('dialog');
-								        </script>
+        <script>
+            chatScroll('dialog');
+        </script>
 
-								        <div class="chatInput">
-								            <input id="msg" class="chatMsg" type="text" autocomplete="off" maxlength="1000">
-								            <div class="chatSubmit" onclick="<?php echo ajaxLoad(url('matchsendchat'), 'chat_get', '#msg|mid:' . $this->match->id, 'ajaxFocus'); ?>">{L:MATCH_CHAT_SEND}</div>
-								        </div>
-								    </div>
+        <div class="chatInput">
+            <input id="msg" class="chatMsg" type="text" autocomplete="off" maxlength="1000">
+            <div class="chatSubmit" onclick="<?php echo ajaxLoad(url('matchsendchat'), 'chat_get', '#msg|mid:'.$this->match->id, 'ajaxFocus'); ?>">{L:MATCH_CHAT_SEND}</div>
+        </div>
+    </div>
 
-								    <!-- END CHAT -->
+    <!-- END CHAT -->
 
-								    <div class="clear"></div>
+    <div class="clear"></div>
 
-								<?php endif;?>
+<?php endif; ?>
 <!-- END CONTENT -->

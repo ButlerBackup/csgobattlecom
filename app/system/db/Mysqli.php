@@ -16,7 +16,7 @@ class Mysqli_DB
             self::$_db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
             if (mysqli_connect_errno()) {
-                exit('Error DB...'.mysqli_connect_errno());
+                exit('Error DB...');
             } else {
                 self::$_db->query("SET NAMES 'utf8'");
                 self::$_db->query("SET CHARACTER SET 'utf8'");

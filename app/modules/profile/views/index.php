@@ -166,15 +166,7 @@ echo '<div class="profile_left">';
 
             echo '<span id="looking">'
 
-                . '<input id="challenge-amount" class="challenge-amount" list="amount" value="5" name="amount">
-                    <datalist  id="amount">
-                     <option value="5">5$</option>
-                     <option value="10">10$</option>
-                     <option value="20">20$</option>
-                     <option value="50">50$</option>
-                     <option value="100">100$</option>
-                   </datalist>
-                   <a  class="looking-h" onclick="ajaxLoad(\''
+                .  '<a  class="looking-h" onclick="ajaxLoad(\''
 
                 . url('profile','playerVisibility')
 
@@ -182,8 +174,18 @@ echo '<div class="profile_left">';
 
                 . $this->profile->id
 
-                . '\')">' . Lang::translate('INDEX_LOOKING_CHALLENGE') . '</a>'
+                . '\')">' . Lang::translate('INDEX_LOOKING_CHALLENGE')
 
+                . '<br />I want play for: $</a>'
+
+                . '<input id="challenge-amount" class="challenge-amount" list="amount" value="5" name="amount">
+                    <datalist  id="amount">
+                     <option value="5">5</option>
+                     <option value="10">10</option>
+                     <option value="20">20</option>
+                     <option value="50">50</option>
+                     <option vlue="100">100</option>
+                   </datalist>'
                 . '</span>';
 
         } else{

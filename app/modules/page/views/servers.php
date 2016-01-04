@@ -17,7 +17,8 @@
     <td>P:Port</td>
     <td>Server Map</td>
   </tr>
- <?php for ($i = 1; $i < 13; $i++) {?>
+ <?php for($i=1;$i<13;$i++)
+ { ?>
   <tr class="headng1">
     <td><?php echo $i; ?></td>
     <td><img src="/app/public/images/img/gmpic.png" alt=""></td>
@@ -27,8 +28,7 @@
     <td>216.52.148.47:27015</td>
     <td>ze_pirates..</td>
   </tr>
-  <?php }
-?>
+  <?php } ?>
 </table>
 
 
@@ -46,7 +46,8 @@
     <td>P:Port</td>
     <td>Server Map</td>
   </tr>
- <?php for ($i = 1; $i < 13; $i++) {?>
+ <?php for($i=1;$i<13;$i++)
+ { ?>
   <tr class="headng1">
     <td><?php echo $i; ?></td>
     <td><img src="/app/public/images/img/gmpic.png" alt=""></td>
@@ -56,8 +57,7 @@
     <td>216.52.148.47:27015</td>
     <td>ze_pirates..</td>
   </tr>
-  <?php }
-?>
+  <?php } ?>
 </table>
 </div>
 
@@ -71,9 +71,9 @@
 
 if (count($this->servers) > 0) {
 
-	foreach ($this->servers as $server) {
+    foreach ($this->servers as $server) {
 
-		?>
+        ?>
 
         <div>
 
@@ -103,11 +103,11 @@ if (count($this->servers) > 0) {
 
             <div>
 
-                <div class="serv-code">
+                <textarea class="serv-code">
 
                     <?php echo htmlspecialchars('<a href="' . $server->addr . '"><img src="' . $server->pic . '" alt="' . $server->name . '"></a>'); ?>
 
-                </div>
+                </textarea>
 
             </div>
 
@@ -115,11 +115,11 @@ if (count($this->servers) > 0) {
 
     <?php
 
-	}
+    }
 
 } else {
 
-	echo '{L:SERVERS_NO_SERVER}';
+    echo '{L:SERVERS_NO_SERVER}';
 
 }
 
