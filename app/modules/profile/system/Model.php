@@ -367,14 +367,19 @@ class ProfileModel extends Model
         return $this->getAll($this->query("SELECT * FROM `servers`;"));
 
     }
+    public function getServersByID($id)
+    {
 
-    public function getServerLock($sid, $interval)
+        return $this->fetch($this->query("SELECT * FROM `servers` WHERE `id` = '$id';"));
+
+    }
+    public function getServerLock($currid, $sid, $interval)
     {
 
         return $this->fetch($this->query("
           SELECT * FROM `matches`
-          WHERE `sid` = '$sid' AND
-          FROM_UNIXTIME(`startTime`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
+          WHERE `sid` = '$sid' AND `id` != '$currid' AND
+          FROM_UNIXTIME(`addServDate`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
           LIMIT 1
           ;"
         ));
@@ -383,7 +388,7 @@ class ProfileModel extends Model
 
     public function setMatchServer($matchID, $serverID) {
 
-        return $this->update('matches', array('sid' => $serverID), "`id` = '$matchID' ");
+        return $this->update('matches', array('sid' => $serverID, 'addServDate' => time()), "`id` = '$matchID' ");
 
     }
 

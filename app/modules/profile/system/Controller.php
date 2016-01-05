@@ -801,6 +801,39 @@ class ProfileController extends Controller {
 		exit;
 	}
 
+	private function getlock($match, $model, $serv)
+	{
+		$Query = new SourceQuery();
+		if (!is_null($serv)) {
+			$server = $serv;
+		}
+		else {
+			$server = $model->getServersByID($match->sid);
+		}
+/*		if (is_null($server)) {
+			return '';
+		}*/
+		$addr = explode(':', $server->addr);
+		try
+		{
+		$Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
+		$info = $Query->GetInfo();
+		$players = $info['Players'];
+
+		$serverLock = $model->getServerLock($match->id, $server->id, INTERVAL_LOCK);
+		if (($players == 0) && is_null($serverLock)) {
+			return 'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
+		}
+		} catch (Exception $e) {
+			return ' Error: ' . $e->getMessage();
+			//echo $e->getMessage();
+		} finally {
+			$Query->Disconnect();
+		}
+
+		return ' Error: Server not found';
+	}
+
 	public function syncAction() {
 		$response = array(
 			'error' => 0,
@@ -835,31 +868,61 @@ class ProfileController extends Controller {
 				}
 
 				if ($match->status == 1 || ($match->status == 2 && $match->blocked)) {
-					if ($match->status == 1) {
-						$servers = $model->getServersList();
-						$Query = new SourceQuery();
-						foreach ($servers as $server) {
-							$addr = explode(':', $server->addr);
-							try
-							{
-								$Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
-								$info = $Query->GetInfo();
-								$players = $info['Players'];
-								//TODO Винести в константу інтервал часу на який перевіряти
-								$serverLock = $model->getServerLock($server->id, INTERVAL_LOCK);
-								if (($players == 0) && is_null($serverLock)) {
-									//$response['target_h']['#map_note'] = '<div class="profile-menu"><div id="challenge"><a href="steam://connect/' . ($server->addr) . '" title="Go to our server : ' . ($server->addr) . '">Join</a></div></div>';
-									$response['target_h']['#map_note'] = 'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
-									$model->setMatchServer($match->id, $server->id); //update matches with server id
-									break;
+					if ($match->status == 2) {
+
+						$resp = $this->getlock($match, $model, null);
+						if (!is_null($resp) && ($resp!='') && !(strpos($resp, 'Error') > 0))
+						{
+							$response['target_h']['#map_note'] = $resp;
+
+						}
+						/*$Query = new SourceQuery();
+						$server = $model->getServersByID($match->sid);
+						$addr = explode(':', $server->addr);
+						$Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
+						$info = $Query->GetInfo();
+						$players = $info['Players'];
+
+						$serverLock = $model->getServerLock($match->id, $server->id, INTERVAL_LOCK);
+						if (($players == 0) && is_null($serverLock)){
+							$response['target_h']['#map_note'] = 'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
+						}*/
+						else{
+							$servers = $model->getServersList();
+							foreach ($servers as $server) {
+								$resp = $this->getlock($match, $model, $server);
+								if (!is_null($resp) && ($resp!=''))
+								{
+									if (!strpos($resp, 'Error') > 0){
+										$model->setMatchServer($match->id, $server->id); //update matches with server id
+										break;
+									}
+									$response['target_h']['#map_note'] = $resp;
+
 								}
-							} catch (Exception $e) {
-								$response['target_h']['#map_note'] = 'error: ' . $e->getMessage();
-								//echo $e->getMessage();
-							} finally {
-								$Query->Disconnect();
+
+/*								$addr = explode(':', $server->addr);
+								try
+								{
+									$Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
+									$info = $Query->GetInfo();
+									$players = $info['Players'];
+									$serverLock = $model->getServerLock($match->id, $server->id, INTERVAL_LOCK);
+									if (($players == 0) && is_null($serverLock)) {
+										//$response['target_h']['#map_note'] = '<div class="profile-menu"><div id="challenge"><a href="steam://connect/' . ($server->addr) . '" title="Go to our server : ' . ($server->addr) . '">Join</a></div></div>';
+										$response['target_h']['#map_note'] = 'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
+										$model->setMatchServer($match->id, $server->id); //update matches with server id
+										break;
+									}
+								} catch (Exception $e) {
+									$response['target_h']['#map_note'] = 'error: ' . $e->getMessage();
+									//echo $e->getMessage();
+								} finally {
+									$Query->Disconnect();
+								}*/
 							}
 						}
+
 						//$response['target_h']['#map_note'] = 'Go to our <a href="' . url('servers') . '" target="_blank">servers page</a> to find a server to play on';
 
 					} else {
