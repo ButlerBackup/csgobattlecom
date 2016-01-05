@@ -1,9 +1,11 @@
 <?php
 
-class ProfileModel extends Model {
+class ProfileModel extends Model
+{
 
-	public function getUserByID($id) {
-		$sql = "
+    public function getUserByID($id)
+    {
+        $sql = "
 
             SELECT *
 
@@ -15,21 +17,45 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql));
-	}
+        return $this->fetch($this->query($sql));
+    }
 
-	public function countNotice($uid) {
-		$sql = "
+    public function getUserInfo($id, $columns)
+    {
+        if ($id and $columns) {
+            $columnsText = '';
+
+            foreach ($columns as $column) {
+                $columnsText .= $column . ',';
+            }
+
+            $columnsText = trim($columnsText, ',');
+            $sql = "
+                SELECT $columnsText
+                FROM `users`
+                WHERE `id` = $id
+                LIMIT 1
+            ";
+
+            return $this->query($sql);
+        }
+    }
+
+
+    public function countNotice($uid)
+    {
+        $sql = "
             SELECT COUNT(`id`)
             FROM `notice`
             WHERE `uid` = '$uid'
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
+    }
 
-	public function getNotice($uid, $start, $end) {
-		$sql = "
+    public function getNotice($uid, $start, $end)
+    {
+        $sql = "
             SELECT *
             FROM `notice`
             WHERE `uid` = '$uid'
@@ -37,12 +63,15 @@ class ProfileModel extends Model {
             LIMIT $start, $end
         ";
 
-		return $this->query($sql);
-	}
+        return $this->query($sql);
+    }
 
-	public function getMatchUsers($id1, $id2) {
 
-		$sql = "
+    public function getMatchUsers($id1, $id2)
+
+    {
+
+        $sql = "
 
             SELECT `id`, `nickname`, `elo`, `country`, `wins`, `ties`, `losses`
 
@@ -52,13 +81,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->getAll($this->query($sql));
 
-	}
-/********** DISCOVER PAGE Methods ***************/
-	public function getDiscoverPageList($uid, $from, $to) {
+        return $this->getAll($this->query($sql));
 
-		$sql = "
+    }
+
+    /********** DISCOVER PAGE Methods ***************/
+    public function getDiscoverPageList($uid, $from, $to)
+
+    {
+
+        $sql = "
 
             SELECT  users.dateLast,users.nickname as username, discover_page.*
 
@@ -76,23 +109,27 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
 
-	}
+        return $this->query($sql);
 
-	public function checkDiscoverRecord($uid) {
-		$sql = "
+    }
+
+    public function checkDiscoverRecord($uid)
+    {
+        $sql = "
             SELECT id,looking,available
 
             FROM discover_page
 
             WHERE uid = '$uid' ";
 
-		return $this->fetch($this->query($sql));
-	}
 
-	public function updateDiscoverRecord($id, $updateString) {
-		$sql = "
+        return $this->fetch($this->query($sql));
+    }
+
+    public function updateDiscoverRecord($id, $updateString)
+    {
+        $sql = "
 
             UPDATE  discover_page
 
@@ -100,26 +137,31 @@ class ProfileModel extends Model {
 
             WHERE id = '$id'   ";
 
-		return $this->query($sql);
-	}
 
-	public function insertDiscoverRecord($column, $value) {
-		$sql = "
+        return $this->query($sql);
+    }
+
+    public function insertDiscoverRecord($column, $value)
+    {
+        $sql = "
 
             INSERT INTO  discover_page( $column )
 
             VALUE ( $value );  ";
 
-		return $this->query($sql);
-	}
+
+        return $this->query($sql);
+    }
 // /************ END DISCOVER PAGE Methods  SECTION**********************
 
-	/*-------------------- STAMINA -----------------*/
-	public function checkStamina($id) {
 
-		$refillTime = time() - 60 * 60 * 5;
+    /*-------------------- STAMINA -----------------*/
+    public function checkStamina($id)
+    {
 
-		$sql = "UPDATE users
+        $refillTime = time() - 60 * 60 * 5;
+
+        $sql = "UPDATE users
 
                     SET stamina = case
                       when last_stamina_changes < $refillTime then stamina_max
@@ -129,39 +171,43 @@ class ProfileModel extends Model {
                  WHERE id = $id
                 ";
 
-		$this->query($sql);
+        $this->query($sql);
 
-	}
+    }
 
-	public function getStamina($id) {
 
-		$sql = "SELECT stamina
+    public function getStamina($id)
+    {
+
+        $sql = "SELECT stamina
                 FROM users
                 WHERE id = $id
                 LIMIT 1
                 ";
-		$staminaRes = $this->fetch($this->query($sql));
+        $staminaRes = $this->fetch($this->query($sql));
 
-		return $staminaRes->stamina;
+        return $staminaRes->stamina;
 
-	}
+    }
 
-	public function getStaminaMax($id) {
+    public function getStaminaMax($id)
+    {
 
-		$sql = "SELECT stamina_max
+        $sql = "SELECT stamina_max
                 FROM users
                 WHERE id = $id
                 LIMIT 1
                 ";
-		$staminaRes = $this->fetch($this->query($sql));
+        $staminaRes = $this->fetch($this->query($sql));
 
-		return $staminaRes->stamina_max;
+        return $staminaRes->stamina_max;
 
-	}
+    }
 
-	public function updateStamina($id, $value) {
+    public function updateStamina($id, $value)
+    {
 
-		$sql = "UPDATE users
+        $sql = "UPDATE users
                     SET stamina = case
                       when stamina+$value <= stamina_max then stamina+$value
                       else stamina_max
@@ -173,20 +219,26 @@ class ProfileModel extends Model {
                 WHERE id = $id
                 LIMIT 1
         ";
-		$this->query($sql);
-	}
+        $this->query($sql);
+    }
 
-	/*-------------------- END STAMINA -----------------*/
+    /*-------------------- END STAMINA -----------------*/
 
-	public function addMessage($data) {
 
-		return $this->insert('match_chat', $data);
+    public function addMessage($data)
 
-	}
+    {
 
-	public function getChatMessages($mid, $from = null) {
+        return $this->insert('match_chat', $data);
 
-		$sql = "
+    }
+
+
+    public function getChatMessages($mid, $from = null)
+
+    {
+
+        $sql = "
 
             SELECT *
 
@@ -196,23 +248,30 @@ class ProfileModel extends Model {
 
         ";
 
-		if (!is_null($from)) {
-			$sql .= " AND `id` > '$from'";
-		}
 
-		$sql .= " ORDER BY `id` ASC";
+        if (!is_null($from))
 
-		if (is_null($from)) {
-			$sql .= " LIMIT 100";
-		}
+            $sql .= " AND `id` > '$from'";
 
-		return $this->query($sql);
 
-	}
+        $sql .= " ORDER BY `id` ASC";
 
-	public function getLadderList($min = 0, $max = 799, $start, $count) {
 
-		$sql = "
+        if (is_null($from))
+
+            $sql .= " LIMIT 100";
+
+
+        return $this->query($sql);
+
+    }
+
+
+    public function getLadderList($min = 0, $max = 799, $start, $count)
+
+    {
+
+        $sql = "
 
             SELECT *
 
@@ -226,13 +285,68 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
 
-	}
+        return $this->query($sql);
 
-	public function countLadderList($min = 0, $max = 799) {
+    }
 
-		$sql = "
+    /*      MAIN PAGE METHODS      */
+    public function getTopLadder($limit)
+
+    {
+
+        $sql = "
+
+            SELECT *
+
+            FROM `users`
+
+            WHERE `ladder` = '1'
+
+            ORDER BY `elo` DESC
+
+            LIMIT $limit
+
+        ";
+
+        return $this->query($sql);
+
+    }
+
+    public function getLastRegistered($limit)
+    {
+        $sql = "
+            SELECT dateReg,nickname,id as uid
+            FROM `users`
+            WHERE `role` LIKE 'user'
+            ORDER BY id DESC
+            LIMIT $limit
+        ";
+
+        return $this->query($sql);
+    }
+
+    public function getLastMatchesList($limit)
+    {
+        $sql = "
+            SELECT matches.id, matches.uwin, matches.pwin,uid,pid, startTime
+            FROM matches
+            WHERE `end` LIKE 'success'
+            ORDER BY id DESC
+            limit $limit
+        ";
+
+        return $this->query($sql);
+    }
+
+    /**********************************************************/
+
+
+    public function countLadderList($min = 0, $max = 799)
+
+    {
+
+        $sql = "
 
             SELECT COUNT(*)
 
@@ -242,13 +356,42 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function getMatchByID($id) {
+    }
 
-		$sql = "
+    public function getServersList()
+    {
+
+        return $this->getAll($this->query("SELECT * FROM `servers`;"));
+
+    }
+
+    public function getServerLock($sid, $interval)
+    {
+
+        return $this->fetch($this->query("
+          SELECT * FROM `matches`
+          WHERE `sid` = '$sid' AND
+          FROM_UNIXTIME(`startTime`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
+          LIMIT 1
+          ;"
+        ));
+
+    }
+
+    public function setMatchServer($matchID, $serverID) {
+
+        return $this->update('matches', array('sid' => $serverID), "`id` = '$matchID' ");
+
+    }
+
+    public function getMatchByID($id)
+
+    {
+
+        $sql = "
 
             SELECT *
 
@@ -260,13 +403,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql));
 
-	}
+        return $this->fetch($this->query($sql));
 
-	public function getMatchesByUP($uid, $pid) {
+    }
 
-		$sql = "
+
+    public function getMatchesByUP($uid, $pid)
+
+    {
+
+        $sql = "
 
             SELECT *
 
@@ -278,13 +425,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql));
 
-	}
+        return $this->fetch($this->query($sql));
 
-	public function getMatchesList($uid, $start, $count) {
+    }
 
-		$sql = "
+
+    public function getMatchesList($uid, $start, $count)
+
+    {
+
+        $sql = "
 
             SELECT m.id, u.nickname, u.country, m.uready, m.pready
 
@@ -298,49 +449,37 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
 
-	}
-
-	public function getServersList() {
-
-		return $this->getAll($this->query("SELECT * FROM `servers`;"));
-
-	}
-    public function getServerLock($sid, $interval) {
-
-        return $this->fetch($this->query("
-          SELECT * FROM `matches`
-          WHERE `sid` = '$sid' AND
-          FROM_UNIXTIME(`startTime`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
-          LIMIT 1
-          ;"
-        ));
+        return $this->query($sql);
 
     }
 
-	public function countMatchesList($uid) {
-		$sql = "
+
+    public function countMatchesList($uid)
+    {
+        $sql = "
             SELECT COUNT(*)
             FROM `matches`
             WHERE (`uid` = '$uid' OR `pid` = '$uid') AND `status` = '1'
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
+    }
 
-	public function countMatchesHistory($uid) {
-		$sql = "
+    public function countMatchesHistory($uid)
+    {
+        $sql = "
             SELECT COUNT(*)
             FROM `matches`
             WHERE (`uid` = '$uid' OR `pid` = '$uid') AND `status` = '2'
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
+    }
 
-	public function getChallengesList($uid, $start, $count) {
-		$sql = "
+    public function getChallengesList($uid, $start, $count)
+    {
+        $sql = "
 
             SELECT m.id, u.nickname, u.country
 
@@ -354,11 +493,12 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
-	}
+        return $this->query($sql);
+    }
 
-	public function getHistoryList($uid, $start, $count) {
-		$sql = "
+    public function getHistoryList($uid, $start, $count)
+    {
+        $sql = "
 
             SELECT m.id, u.nickname, u.country
 
@@ -373,12 +513,14 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
-	}
+        return $this->query($sql);
+    }
 
-	public function countChallengesList($uid) {
+    public function countChallengesList($uid)
 
-		$sql = "
+    {
+
+        $sql = "
 
             SELECT COUNT(*)
 
@@ -388,13 +530,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function getRattingHistory($uid, $pid) {
+    }
 
-		$sql = "
+
+    public function getRattingHistory($uid, $pid)
+
+    {
+
+        $sql = "
 
             SELECT COUNT(*)
 
@@ -404,13 +550,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function countRattingToday($uid) {
+    }
 
-		$sql = "
+
+    public function countRattingToday($uid)
+
+    {
+
+        $sql = "
 
             SELECT COUNT(*)
 
@@ -420,25 +570,33 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function setSteamID($id, $steamID) {
+    }
 
-		$fields['steamid'] = null;
 
-		$this->update('users', $fields, "`steamid` = '$steamID'");
+    public function setSteamID($id, $steamID)
 
-		$fields['steamid'] = $steamID;
+    {
 
-		return $this->update('users', $fields, "`id` = '$id'");
+        $fields['steamid'] = null;
 
-	}
+        $this->update('users', $fields, "`steamid` = '$steamID'");
 
-	public function countRefByID($id) {
 
-		$sql = "
+        $fields['steamid'] = $steamID;
+
+        return $this->update('users', $fields, "`id` = '$id'");
+
+    }
+
+
+    public function countRefByID($id)
+
+    {
+
+        $sql = "
 
             SELECT COUNT(*)
 
@@ -448,15 +606,19 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	// Count messages for user
+    }
 
-	public function countMsg($id) {
 
-		$sql = "
+    // Count messages for user
+
+    public function countMsg($id)
+
+    {
+
+        $sql = "
 
             SELECT
 
@@ -470,15 +632,19 @@ class ProfileModel extends Model {
 
         ";
 
-		$result = $this->getAll($this->query($sql), 'row');
 
-		return $result[0][0] + $result[1][0];
+        $result = $this->getAll($this->query($sql), 'row');
 
-	}
+        return $result[0][0] + $result[1][0];
 
-	public function countUsersOnline() {
+    }
 
-		$sql = "
+
+    public function countUsersOnline()
+
+    {
+
+        $sql = "
 
             SELECT COUNT(`id`)
 
@@ -488,13 +654,16 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function getUsersOnline() {
+    }
 
-		$sql = "
+    public function getUsersOnline()
+
+    {
+
+        $sql = "
 
             SELECT nickname
 
@@ -504,13 +673,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->query($sql);
 
-	}
+        return $this->query($sql);
 
-	public function countGuestsOnline() {
+    }
 
-		$sql = "
+
+    public function countGuestsOnline()
+
+    {
+
+        $sql = "
 
             SELECT COUNT(`id`)
 
@@ -520,13 +693,17 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql), 'row')[0];
 
-	}
+        return $this->fetch($this->query($sql), 'row')[0];
 
-	public function getGuestByIP($ip) {
+    }
 
-		$sql = "
+
+    public function getGuestByIP($ip)
+
+    {
+
+        $sql = "
 
             SELECT *
 
@@ -538,157 +715,210 @@ class ProfileModel extends Model {
 
         ";
 
-		return $this->fetch($this->query($sql));
 
-	}
+        return $this->fetch($this->query($sql));
 
-	// Update last visit time in preDispatch
-	public function updateUserByID($data, $id) {
-		return $this->update('users', $data, "`id` = '$id' LIMIT 1");
-	}
+    }
 
-	public function getCountryByCode($code) {
-		return $this->select('countries', "`code` =  '$code'");
-	}
 
-	public function friendsStatus($uid, $pid) {
-		$query = "SELECT `uid`,`pid`,`status`,`ban` FROM `friends` WHERE (`uid` = '$uid' AND `pid` = '$pid') OR (`uid` = '$pid' AND `pid` = '$uid') LIMIT 1; ";
+    // Update last visit time in preDispatch
+    public function updateUserByID($data, $id)
+    {
+        return $this->update('users', $data, "`id` = '$id' LIMIT 1");
+    }
 
-		return $this->fetch($this->query($query), 'assoc');
-	}
 
-	public function countRequests($uid) {
-		$query = "SELECT COUNT(*) FROM `friends` WHERE `pid` = '$uid' AND `status` = 0 AND `ban` = 0; ";
+    public function getCountryByCode($code)
+    {
+        return $this->select('countries', "`code` =  '$code'");
+    }
 
-		return $this->fetch($this->query($query), 'row')[0];
-	}
 
-	public function addMatchAsset($item) {
+    public function friendsStatus($uid, $pid)
+    {
+        $query = "SELECT `uid`,`pid`,`status`,`ban` FROM `friends` WHERE (`uid` = '$uid' AND `pid` = '$pid') OR (`uid` = '$pid' AND `pid` = '$uid') LIMIT 1; ";
 
-		return $this->insert('assets', $item);
+        return $this->fetch($this->query($query), 'assoc');
+    }
 
-	}
 
-	public function removeAsset($uid, $id) {
+    public function countRequests($uid)
+    {
+        $query = "SELECT COUNT(*) FROM `friends` WHERE `pid` = '$uid' AND `status` = 0 AND `ban` = 0; ";
 
-		return $this->delete('assets', " `id` = '$id' AND `uid` = '$uid' LIMIT 1");
+        return $this->fetch($this->query($query), 'row')[0];
+    }
 
-	}
 
-	public function getMatchAssets($uid, $mid) {
+    public function addMatchAsset($item)
 
-		$query = "SELECT * FROM `assets` WHERE `uid` = '$uid' AND `mid` = '$mid' ";
+    {
 
-		return $this->getAll($this->query($query));
+        return $this->insert('assets', $item);
 
-	}
+    }
 
-	public function getMatchAsset($uid, $id) {
 
-		$query = "SELECT * FROM `assets` WHERE `id` = '$id' AND `uid` = '$uid' LIMIT 1 ";
+    public function removeAsset($uid, $id)
 
-		return $this->fetch($this->query($query));
+    {
 
-	}
+        return $this->delete('assets', " `id` = '$id' AND `uid` = '$uid' LIMIT 1");
 
-	public function getCountRequestedMatchAssets($mid) {
+    }
 
-		$query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' ";
 
-		return $this->fetch($this->query($query), 'row')[0];
+    public function getMatchAssets($uid, $mid)
 
-	}
+    {
 
-	public function getCountReceivedMatchAssets($mid) {
+        $query = "SELECT * FROM `assets` WHERE `uid` = '$uid' AND `mid` = '$mid' ";
 
-		$query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' AND `newAssetId` IS NOT NULL; ";
 
-		return $this->fetch($this->query($query), 'row')[0];
+        return $this->getAll($this->query($query));
 
-	}
+    }
 
-	public function getCountMatchAssets($mid) {
 
-		$query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' ";
+    public function getMatchAsset($uid, $id)
 
-		return $this->fetch($this->query($query), 'row')[0];
+    {
 
-	}
+        $query = "SELECT * FROM `assets` WHERE `id` = '$id' AND `uid` = '$uid' LIMIT 1 ";
 
-	public function setMatchReady($matchID, $data) {
 
-		return $this->update('matches', $data, " `id` = '$matchID' ");
+        return $this->fetch($this->query($query));
 
-	}
+    }
 
-	public function setMatchBlocked($matchID) {
 
-		return $this->update('matches', array('blocked' => '1'), " `id` = '$matchID' ");
+    public function getCountRequestedMatchAssets($mid)
 
-	}
+    {
 
-    public function setMatchServer($matchID, $serverID) {
+        $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' ";
 
-		return $this->update('matches', array('sid' => $serverID), "`id` = '$matchID' ");
 
-	}
+        return $this->fetch($this->query($query), 'row')[0];
 
-	public function getTradeLink($userID) {
+    }
 
-		$query = $this->query("SELECT partner, token FROM users WHERE id = '$userID' LIMIT 1;");
 
-		if ($query) {
+    public function getCountReceivedMatchAssets($mid)
 
-			$fetch = $this->fetch($query);
+    {
 
-			return ($fetch->partner) ? "https://steamcommunity.com/tradeoffer/new/?partner=" . $fetch->partner . "&token=" . $fetch->token : 'None';
+        $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' AND `newAssetId` IS NOT NULL; ";
 
-		} else {
-			return false;
-		}
 
-	}
+        return $this->fetch($this->query($query), 'row')[0];
 
-	public function setSteamTradeLink($id, $data) {
-		return $this->update('users', $data, "`id` = '$id' LIMIT 1");
-	}
+    }
 
-	public function updateMatchWL($mid, $data) {
-		return $this->update('matches', $data, " `id` = '$mid' ");
-	}
 
-	public function checkMatchExist($userID, $playerID) {
-		$query = "SELECT COUNT( id ) as matchCount
+    public function getCountMatchAssets($mid)
+
+    {
+
+        $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' ";
+
+
+        return $this->fetch($this->query($query), 'row')[0];
+
+    }
+
+
+    public function setMatchReady($matchID, $data)
+
+    {
+
+        return $this->update('matches', $data, " `id` = '$matchID' ");
+
+    }
+
+
+    public function setMatchBlocked($matchID)
+
+    {
+
+        return $this->update('matches', array('blocked' => '1'), " `id` = '$matchID' ");
+
+    }
+
+
+    public function getTradeLink($userID)
+
+    {
+
+        $query = $this->query("SELECT partner, token FROM users WHERE id = '$userID' LIMIT 1;");
+
+
+        if ($query) {
+
+            $fetch = $this->fetch($query);
+
+            return ($fetch->partner) ? "https://steamcommunity.com/tradeoffer/new/?partner=" . $fetch->partner . "&token=" . $fetch->token : 'None';
+
+        } else
+
+            return false;
+
+    }
+
+    public function setSteamTradeLink($id, $data)
+    {
+        return $this->update('users', $data, "`id` = '$id' LIMIT 1");
+    }
+
+    public function updateMatchWL($mid, $data)
+    {
+        return $this->update('matches', $data, " `id` = '$mid' ");
+    }
+
+    public function checkMatchExist($userID, $playerID)
+    {
+        $query = "SELECT COUNT( id ) as matchCount
                         FROM matches
                         WHERE (  (  uid =$userID  AND pid =$playerID ) OR ( pid =$userID AND uid =$playerID )   )
                         AND STATUS NOT LIKE 2";
-		$fetch = $this->fetch($this->query($query));
-		return $fetch->matchCount;
+        $fetch = $this->fetch($this->query($query));
+        return $fetch->matchCount;
 
-	}
+    }
 
-	public function updateWLStat($winnerId, $loserId, $eloW = false, $eloL = false) {
+    public function updateWLStat($winnerId, $loserId, $eloW = false, $eloL = false)
 
-		if ($eloW) {
-			$winPart = ", `elo` = '$eloW'";
-		} else {
-			$winPart = "";
-		}
+    {
 
-		if ($eloL) {
-			$losePart = ", `elo` = '$eloL'";
-		} else {
-			$losePart = "";
-		}
+        if ($eloW)
 
-		$queryWinner = "UPDATE `users` SET `wins` = `wins` +1$winPart WHERE `id` = '$winnerId' LIMIT 1;";
+            $winPart = ", `elo` = '$eloW'";
 
-		$queryLoser = "UPDATE `users` SET `losses` = `losses` +1$losePart WHERE `id` = '$loserId' LIMIT 1;";
+        else
 
-		return $this->query($queryWinner) && $this->query($queryLoser);
+            $winPart = "";
 
-	}
+
+        if ($eloL)
+
+            $losePart = ", `elo` = '$eloL'";
+
+        else
+
+            $losePart = "";
+
+
+        $queryWinner = "UPDATE `users` SET `wins` = `wins` +1$winPart WHERE `id` = '$winnerId' LIMIT 1;";
+
+        $queryLoser = "UPDATE `users` SET `losses` = `losses` +1$losePart WHERE `id` = '$loserId' LIMIT 1;";
+
+
+        return $this->query($queryWinner) && $this->query($queryLoser);
+
+    }
 
 }
+
+
 
 /* End of file */
