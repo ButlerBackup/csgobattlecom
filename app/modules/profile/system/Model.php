@@ -20,9 +20,9 @@ class ProfileModel extends Model
         return $this->fetch($this->query($sql));
     }
 
-    public function getUserInfo($id, $columns)
+    public function getUserInfo($id,$columns)
     {
-        if ($id and $columns) {
+        if($id and $columns) {
             $columnsText = '';
 
             foreach ($columns as $column) {
@@ -82,12 +82,12 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->getAll($this->query($sql));
 
     }
-
-    /********** DISCOVER PAGE Methods ***************/
-    public function getDiscoverPageList($uid, $from, $to)
+/********** DISCOVER PAGE Methods ***************/
+    public function getDiscoverPageList($uid,$from,$to)
 
     {
 
@@ -100,8 +100,8 @@ class ProfileModel extends Model
             LEFT JOIN users ON users.id = discover_page.uid
 
             WHERE (discover_page.available = 1
-              OR ( discover_page.last_looking > '" . (time() - 3600) . "'  AND discover_page.looking = 1 ))
-              AND  users.dateLast > '" . (time() - 300) . "'
+              OR ( discover_page.last_looking > '".(time()-3600)."'  AND discover_page.looking = 1 ))
+              AND  users.dateLast > '".(time() - 300)."'
 
               ORDER BY discover_page.last_looking DESC
 
@@ -124,10 +124,11 @@ class ProfileModel extends Model
             WHERE uid = '$uid' ";
 
 
+
         return $this->fetch($this->query($sql));
     }
 
-    public function updateDiscoverRecord($id, $updateString)
+    public function updateDiscoverRecord($id,$updateString)
     {
         $sql = "
 
@@ -141,7 +142,7 @@ class ProfileModel extends Model
         return $this->query($sql);
     }
 
-    public function insertDiscoverRecord($column, $value)
+    public function insertDiscoverRecord($column,$value)
     {
         $sql = "
 
@@ -156,10 +157,9 @@ class ProfileModel extends Model
 
 
     /*-------------------- STAMINA -----------------*/
-    public function checkStamina($id)
-    {
+    public function checkStamina($id){
 
-        $refillTime = time() - 60 * 60 * 5;
+        $refillTime = time()-60*60*5;
 
         $sql = "UPDATE users
 
@@ -176,8 +176,7 @@ class ProfileModel extends Model
     }
 
 
-    public function getStamina($id)
-    {
+    public function getStamina($id){
 
         $sql = "SELECT stamina
                 FROM users
@@ -190,8 +189,7 @@ class ProfileModel extends Model
 
     }
 
-    public function getStaminaMax($id)
-    {
+    public function getStaminaMax($id){
 
         $sql = "SELECT stamina_max
                 FROM users
@@ -200,12 +198,11 @@ class ProfileModel extends Model
                 ";
         $staminaRes = $this->fetch($this->query($sql));
 
-        return $staminaRes->stamina_max;
+        return  $staminaRes->stamina_max;
 
     }
 
-    public function updateStamina($id, $value)
-    {
+    public function updateStamina($id,$value){
 
         $sql = "UPDATE users
                     SET stamina = case
@@ -213,7 +210,7 @@ class ProfileModel extends Model
                       else stamina_max
                      end,
                       last_stamina_changes = case
-                      when stamina+$value <= stamina_max then " . time() . "
+                      when stamina+$value <= stamina_max then ".time()."
                       else last_stamina_changes
                      end
                 WHERE id = $id
@@ -225,6 +222,7 @@ class ProfileModel extends Model
     /*-------------------- END STAMINA -----------------*/
 
 
+
     public function addMessage($data)
 
     {
@@ -232,6 +230,7 @@ class ProfileModel extends Model
         return $this->insert('match_chat', $data);
 
     }
+
 
 
     public function getChatMessages($mid, $from = null)
@@ -249,12 +248,15 @@ class ProfileModel extends Model
         ";
 
 
+
         if (!is_null($from))
 
             $sql .= " AND `id` > '$from'";
 
 
+
         $sql .= " ORDER BY `id` ASC";
+
 
 
         if (is_null($from))
@@ -262,9 +264,11 @@ class ProfileModel extends Model
             $sql .= " LIMIT 100";
 
 
+
         return $this->query($sql);
 
     }
+
 
 
     public function getLadderList($min = 0, $max = 799, $start, $count)
@@ -286,11 +290,12 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->query($sql);
 
     }
 
-    /*      MAIN PAGE METHODS      */
+/*      MAIN PAGE METHODS      */
     public function getTopLadder($limit)
 
     {
@@ -338,8 +343,7 @@ class ProfileModel extends Model
 
         return $this->query($sql);
     }
-
-    /**********************************************************/
+/**********************************************************/
 
 
     public function countLadderList($min = 0, $max = 799)
@@ -357,40 +361,12 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
 
-    public function getServersList()
-    {
 
-        return $this->getAll($this->query("SELECT * FROM `servers`;"));
-
-    }
-    public function getServersByID($id)
-    {
-
-        return $this->fetch($this->query("SELECT * FROM `servers` WHERE `id` = '$id';"));
-
-    }
-    public function getServerLock($currid, $sid, $interval)
-    {
-
-        return $this->fetch($this->query("
-          SELECT * FROM `matches`
-          WHERE `sid` = '$sid' AND `id` != '$currid' AND
-          FROM_UNIXTIME(`addServDate`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
-          LIMIT 1
-          ;"
-        ));
-
-    }
-
-    public function setMatchServer($matchID, $serverID) {
-
-        return $this->update('matches', array('sid' => $serverID, 'addServDate' => time()), "`id` = '$matchID' ");
-
-    }
 
     public function getMatchByID($id)
 
@@ -409,9 +385,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql));
 
     }
+
 
 
     public function getMatchesByUP($uid, $pid)
@@ -431,9 +409,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql));
 
     }
+
 
 
     public function getMatchesList($uid, $start, $count)
@@ -455,9 +435,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->query($sql);
 
     }
+
 
 
     public function countMatchesList($uid)
@@ -536,9 +518,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
+
 
 
     public function getRattingHistory($uid, $pid)
@@ -551,14 +535,16 @@ class ProfileModel extends Model
 
             FROM `rating_history`
 
-            WHERE `uid` = '$uid' AND `pid` = '$pid' AND `time` > '" . (time() - 24 * 3600) . "'
+            WHERE `uid` = '$uid' AND `pid` = '$pid' AND `time` > '".(time()-24*3600)."'
 
         ";
+
 
 
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
+
 
 
     public function countRattingToday($uid)
@@ -571,14 +557,16 @@ class ProfileModel extends Model
 
             FROM `rating_history`
 
-            WHERE `uid` = '$uid' AND `time` > '" . (time() - 24 * 3600) . "'
+            WHERE `uid` = '$uid' AND `time` > '".(time()-24*3600)."'
 
         ";
+
 
 
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
+
 
 
     public function setSteamID($id, $steamID)
@@ -590,11 +578,13 @@ class ProfileModel extends Model
         $this->update('users', $fields, "`steamid` = '$steamID'");
 
 
+
         $fields['steamid'] = $steamID;
 
         return $this->update('users', $fields, "`id` = '$id'");
 
     }
+
 
 
     public function countRefByID($id)
@@ -612,9 +602,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
+
 
 
     // Count messages for user
@@ -638,11 +630,13 @@ class ProfileModel extends Model
         ";
 
 
+
         $result = $this->getAll($this->query($sql), 'row');
 
         return $result[0][0] + $result[1][0];
 
     }
+
 
 
     public function countUsersOnline()
@@ -655,16 +649,17 @@ class ProfileModel extends Model
 
             FROM `users`
 
-            WHERE `dateLast` >= '" . (time() - 300) . "'
+            WHERE `dateLast` >= '".(time()-300)."'
 
         ";
+
 
 
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
 
-    public function getUsersOnline()
+ public function getUsersOnline()
 
     {
 
@@ -674,12 +669,12 @@ class ProfileModel extends Model
 
             FROM `users`
 
-            WHERE `dateLast` >= '" . (time() - 300) . "'
+            WHERE `dateLast` >= '".(time()-300)."'
 
         ";
 
 
-        return $this->query($sql);
+ return $this->query($sql);
 
     }
 
@@ -694,14 +689,16 @@ class ProfileModel extends Model
 
             FROM `guests`
 
-            WHERE `time` >= '" . (time() - 300) . "'
+            WHERE `time` >= '".(time()-300)."'
 
         ";
+
 
 
         return $this->fetch($this->query($sql), 'row')[0];
 
     }
+
 
 
     public function getGuestByIP($ip)
@@ -721,9 +718,11 @@ class ProfileModel extends Model
         ";
 
 
+
         return $this->fetch($this->query($sql));
 
     }
+
 
 
     // Update last visit time in preDispatch
@@ -731,6 +730,7 @@ class ProfileModel extends Model
     {
         return $this->update('users', $data, "`id` = '$id' LIMIT 1");
     }
+
 
 
     public function getCountryByCode($code)
@@ -743,17 +743,18 @@ class ProfileModel extends Model
     {
         $query = "SELECT `uid`,`pid`,`status`,`ban` FROM `friends` WHERE (`uid` = '$uid' AND `pid` = '$pid') OR (`uid` = '$pid' AND `pid` = '$uid') LIMIT 1; ";
 
-        return $this->fetch($this->query($query), 'assoc');
+        return $this->fetch($this->query($query),'assoc');
     }
 
 
-    public function countRequests($uid)
+    public function countRequests ($uid)
     {
         $query = "SELECT COUNT(*) FROM `friends` WHERE `pid` = '$uid' AND `status` = 0 AND `ban` = 0; ";
 
         return $this->fetch($this->query($query), 'row')[0];
     }
 
+    
 
     public function addMatchAsset($item)
 
@@ -763,6 +764,7 @@ class ProfileModel extends Model
 
     }
 
+    
 
     public function removeAsset($uid, $id)
 
@@ -772,6 +774,7 @@ class ProfileModel extends Model
 
     }
 
+    
 
     public function getMatchAssets($uid, $mid)
 
@@ -779,10 +782,12 @@ class ProfileModel extends Model
 
         $query = "SELECT * FROM `assets` WHERE `uid` = '$uid' AND `mid` = '$mid' ";
 
+        
 
         return $this->getAll($this->query($query));
 
     }
+
 
 
     public function getMatchAsset($uid, $id)
@@ -792,9 +797,11 @@ class ProfileModel extends Model
         $query = "SELECT * FROM `assets` WHERE `id` = '$id' AND `uid` = '$uid' LIMIT 1 ";
 
 
+
         return $this->fetch($this->query($query));
 
     }
+
 
 
     public function getCountRequestedMatchAssets($mid)
@@ -804,9 +811,11 @@ class ProfileModel extends Model
         $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' ";
 
 
-        return $this->fetch($this->query($query), 'row')[0];
+
+        return $this->fetch($this->query($query),'row')[0];
 
     }
+
 
 
     public function getCountReceivedMatchAssets($mid)
@@ -816,9 +825,11 @@ class ProfileModel extends Model
         $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' AND `requested` = '1' AND `newAssetId` IS NOT NULL; ";
 
 
-        return $this->fetch($this->query($query), 'row')[0];
+
+        return $this->fetch($this->query($query),'row')[0];
 
     }
+
 
 
     public function getCountMatchAssets($mid)
@@ -828,10 +839,12 @@ class ProfileModel extends Model
         $query = "SELECT COUNT(*) FROM `assets` WHERE `mid` = '$mid' ";
 
 
-        return $this->fetch($this->query($query), 'row')[0];
+
+        return $this->fetch($this->query($query),'row')[0];
 
     }
 
+    
 
     public function setMatchReady($matchID, $data)
 
@@ -841,15 +854,17 @@ class ProfileModel extends Model
 
     }
 
+    
 
     public function setMatchBlocked($matchID)
 
     {
 
-        return $this->update('matches', array('blocked' => '1'), " `id` = '$matchID' ");
+        return $this->update('matches', array( 'blocked' => '1' ), " `id` = '$matchID' ");
 
     }
 
+    
 
     public function getTradeLink($userID)
 
@@ -857,12 +872,13 @@ class ProfileModel extends Model
 
         $query = $this->query("SELECT partner, token FROM users WHERE id = '$userID' LIMIT 1;");
 
+        
 
-        if ($query) {
+        if($query) {
 
             $fetch = $this->fetch($query);
 
-            return ($fetch->partner) ? "https://steamcommunity.com/tradeoffer/new/?partner=" . $fetch->partner . "&token=" . $fetch->token : 'None';
+            return ($fetch->partner)?"https://steamcommunity.com/tradeoffer/new/?partner=".$fetch->partner."&token=".$fetch->token : 'None';
 
         } else
 
@@ -880,14 +896,14 @@ class ProfileModel extends Model
         return $this->update('matches', $data, " `id` = '$mid' ");
     }
 
-    public function checkMatchExist($userID, $playerID)
+    public function checkMatchExist($userID,$playerID)
     {
-        $query = "SELECT COUNT( id ) as matchCount
+            $query = "SELECT COUNT( id ) as matchCount
                         FROM matches
                         WHERE (  (  uid =$userID  AND pid =$playerID ) OR ( pid =$userID AND uid =$playerID )   )
                         AND STATUS NOT LIKE 2";
-        $fetch = $this->fetch($this->query($query));
-        return $fetch->matchCount;
+            $fetch = $this->fetch($this->query($query));
+            return $fetch->matchCount;
 
     }
 
@@ -904,6 +920,7 @@ class ProfileModel extends Model
             $winPart = "";
 
 
+
         if ($eloL)
 
             $losePart = ", `elo` = '$eloL'";
@@ -913,9 +930,11 @@ class ProfileModel extends Model
             $losePart = "";
 
 
+
         $queryWinner = "UPDATE `users` SET `wins` = `wins` +1$winPart WHERE `id` = '$winnerId' LIMIT 1;";
 
         $queryLoser = "UPDATE `users` SET `losses` = `losses` +1$losePart WHERE `id` = '$loserId' LIMIT 1;";
+
 
 
         return $this->query($queryWinner) && $this->query($queryLoser);

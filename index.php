@@ -37,7 +37,7 @@
 
     define('END_TIME', microtime(1));
     //echo 'Движок: '.(END_TIME-START_TIME).'<hr/>';
-/*
+
     echo 'URI: '._URI_.'<br/>';
     echo 'DIR: '._DIR_.'<br/>';
     echo 'SELF: '._SELF_.'<br/>';
@@ -45,5 +45,5 @@
     echo 'BASEPATH: '._BASEPATH_.'<br/>';
     echo 'SYSDIR: '._SYSDIR_.'<br/>';
     echo 'FCPATH: '._FCPATH_.'<br/>';
-*/
+
 /* End of file */

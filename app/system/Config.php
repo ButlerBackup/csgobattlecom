@@ -7,6 +7,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'main');
 define('DB_USER', 'root');
+//define('DB_PASS', 'uriO3vq3');
 define('DB_PASS', '000000');
 
 // Base Site URL
@@ -39,7 +40,6 @@ define('STEAM_PASSWORD', 'cm2007rekt');
 define('EMAIL_IMAP',"{imap.mail.yahoo.com:993/imap/ssl}INBOX");
 define('EMAIL_USERNAME',"cadymacias@yahoo.com");
 define('EMAIL_PASSWORD',"Bagdan2007");
-define('INTERVAL_LOCK', 30);
 
 
 /* End of file */
