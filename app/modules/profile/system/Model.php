@@ -940,6 +940,23 @@ class ProfileModel extends Model
         return $this->query($queryWinner) && $this->query($queryLoser);
 
     }
+    public function getServerLock($sid, $interval) {
+
+        return $this->fetch($this->query("
+          SELECT * FROM `matches`
+          WHERE `sid` = '$sid' AND
+          FROM_UNIXTIME(`startTime`) BETWEEN timestamp(DATE_SUB(NOW(), INTERVAL '$interval' MINUTE)) AND timestamp(NOW())
+          LIMIT 1
+          ;"
+        ));
+
+    }
+
+    public function setMatchServer($matchID, $serverID) {
+
+        return $this->update('matches', array('sid' => $serverID), "`id` = '$matchID' ");
+
+    }
 
 }
 

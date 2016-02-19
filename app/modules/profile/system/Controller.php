@@ -1,4 +1,6 @@
 <?php
+use xPaw\SourceQuery\SourceQuery;
+
 class ProfileController extends Controller
 {
 	public function indexAction()
@@ -805,6 +807,44 @@ class ProfileController extends Controller
         exit;
     }
 
+    public function startServer($model, $match)
+    {
+        $servers = $model->getServersList();
+        //Header('Content-Type: text/plain');
+        //Header('X-Content-Type-Options: nosniff');
+        //define('SQ_TIMEOUT', 1);
+        //define('SQ_ENGINE', SourceQuery::SOURCE);
+
+        $Query = new SourceQuery();
+        foreach ($servers as $server) {
+            $addr = explode ( ':', $server->addr);
+            //define('SQ_SERVER_ADDR', $addr[0]);
+            //define('SQ_SERVER_PORT', $addr[1]);
+            try
+            {
+                $Query->Connect($addr[0], $addr[1], 1, SourceQuery::SOURCE);
+                $info = $Query->GetInfo();
+                $players = $info['Players'];
+                //print_r($Query->GetInfo());
+                //print_r($Query->GetPlayers());
+                //print_r($Query->GetRules());
+                $serverLock = $model->getServerLock($server->id,INTERVAL_LOCK);
+                if (($players == 0) && is_null($serverLock)){
+                    //$response['target_h']['#map_note'] = 'Go to our '. var_export($server->addr, true). ' '. var_export($match->id, true);
+                    $response['target_h']['#map_note'] =
+                        'Go to our server : ' . ($server->addr) . ' <a href="steam://connect/' . ($server->addr) . '" id="join" title="Join">Join</a>';
+                    $model->setMatchServer($match->id, $server->id); //update matches with server id
+                    break;
+                }
+            } catch (Exception $e) {
+                $response['target_h']['#map_note'] = 'error: '.$e->getMessage();
+                //echo $e->getMessage();
+            } finally {
+                $Query->Disconnect();
+            }
+        }
+
+    }
     public function syncAction()
     {
         $response = array(

@@ -41,5 +41,5 @@ define('EMAIL_IMAP',"{imap.mail.yahoo.com:993/imap/ssl}INBOX");
 define('EMAIL_USERNAME',"cadymacias@yahoo.com");
 define('EMAIL_PASSWORD',"Bagdan2007");
 
-
+define('INTERVAL_LOCK', 30);
 /* End of file */
